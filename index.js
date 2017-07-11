@@ -14,12 +14,18 @@ var argv = require("yargs")
     description:
       "where to look for the source package.json.\ndefault: process.cwd()"
   })
+  .option("destination", {
+    alias: "d",
+    description:
+      "where is the node_modules where propagation will happen.\n" +
+      "default: ./"
+  })
   .demandOption("field")
   .help().argv;
 
+var destinationPath = argv.destination ? argv.destination : "./";
 var sourcePath = argv.source ? argv.source : process.cwd();
 var sourcePackageJsonPath = path.join(sourcePath, "package.json");
-
 var sourcePackageJson = JSON.parse(
   fs.readFileSync(sourcePackageJsonPath, "utf-8")
 );
@@ -68,6 +74,9 @@ if (!(argv.field in sourcePackageJson)) {
       sourcePackageJsonPath +
       ", so we can't propagate that."
   );
+  console.error(
+    "Look at that:\n\n" + JSON.stringify(sourcePackageJson, null, 2)
+  );
 } else {
-  insertShims(sourcePath, argv.field);
+  insertShims(destinationPath, argv.field);
 }

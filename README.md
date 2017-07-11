@@ -41,6 +41,13 @@ Note, if you want to specify where is the source `package.json`, you can pass it
 ./node_modules/.bin/propagate-replacement-fields --field=browser --source=../over-there
 ```
 
+Similarly, if you want to specify where is the destination `node_modules`, you
+can pass its path to `--destination` (no need to specify the last part, "/node_modules"):
+
+```
+./node_modules/.bin/propagate-replacement-fields --field=browser --destination=./over-here
+```
+
 # install
 
 ```
@@ -57,10 +64,12 @@ propagate-replacement-fields --help
 Usage: propagate-replacement-fields [options]
 
 Options:
-  --field, -f   package.json field with replacement modules           [required]
-  --source, -s  where to look for the source package.json.
-                default: process.cwd()
-  --help        Show help                                              [boolean]
+  --field, -f        package.json field with replacement modules      [required]
+  --source, -s       where to look for the source package.json.
+                     default: process.cwd()
+  --destination, -d  where is the node_modules where propagation will happen.
+                     default: ./
+  --help             Show help                                         [boolean]
 
 Examples:
   propagate-replacement-fields --field=browser
