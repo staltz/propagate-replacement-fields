@@ -1,6 +1,6 @@
 {
   "name": "propagate-replacement-fields",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "CLI tool to declare node modules replacements everywhere",
   "main": "index.js",
   "bin": "index.js",
