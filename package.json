@@ -1,0 +1,12 @@
+{
+  "name": "propagate-replacement-fields",
+  "version": "1.0.0",
+  "description": "CLI tool to declare node modules replacements everywhere",
+  "main": "index.js",
+  "bin": "index.js",
+  "author": "Andre Staltz (staltz.com)",
+  "license": "MIT",
+  "dependencies": {
+    "yargs": "^8.0.2"
+  }
+}
