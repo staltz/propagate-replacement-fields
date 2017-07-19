@@ -48,13 +48,13 @@ can pass its path to `--destination` (no need to specify the last part, "/node_m
 ./node_modules/.bin/propagate-replacement-fields --field=browser --destination=./over-here
 ```
 
-# install
+## install
 
 ```
 npm install propagate-replacement-fields
 ```
 
-# usage
+## usage
 
 ```
 propagate-replacement-fields --help
@@ -74,3 +74,11 @@ Options:
 Examples:
   propagate-replacement-fields --field=browser
 ```
+
+## license
+
+MIT, Andre Staltz
+
+## versioning
+
+This package follows [ComVer](https://github.com/staltz/comver), not SemVer.

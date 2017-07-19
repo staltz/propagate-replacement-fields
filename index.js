@@ -46,16 +46,18 @@ function insertShims(currentPath, field) {
       var packageJsonPath = path.join(modulePath, "package.json");
       var prevFileContent = fs.readFileSync(packageJsonPath, "utf-8");
       var packageJson = JSON.parse(prevFileContent);
-      if (field in packageJson) {
-        Object.keys(sourcePackageJson[field]).forEach(moduleName => {
-          if (!(moduleName in packageJson[field])) {
-            packageJson[field][moduleName] =
-              sourcePackageJson[field][moduleName];
-          }
-        });
-      } else {
-        packageJson[field] = sourcePackageJson[field];
+      if (!(field in packageJson)) {
+        packageJson[field] = {};
       }
+      Object.keys(sourcePackageJson[field]).forEach(replaced => {
+        const replacer = sourcePackageJson[field][replaced];
+        if (
+          replacer !== packageJson.name &&
+          !(replaced in packageJson[field])
+        ) {
+          packageJson[field][replaced] = replacer;
+        }
+      });
       var nextFileContent = JSON.stringify(packageJson, null, "  ");
       fs.writeFileSync(packageJsonPath, nextFileContent, "utf-8");
 
