@@ -10,6 +10,6 @@
     "node": ">=12"
   },
   "dependencies": {
-    "yargs": "^8.0.2"
+    "yargs": "^17.3.1"
   }
 }
