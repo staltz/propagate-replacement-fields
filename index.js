@@ -1,8 +1,9 @@
-#! /usr/bin/env node
-var fs = require('fs');
-var path = require('path');
+#!/usr/bin/env node
+const fs = require('fs');
+const path = require('path');
+const yargs = require('yargs');
 
-var argv = require('yargs')
+const argv = yargs
   .usage('Usage: $0 [options]')
   .example('$0 --field=browser')
   .option('field', {
@@ -23,10 +24,10 @@ var argv = require('yargs')
   .demandOption('field')
   .help().argv;
 
-var destinationPath = argv.destination ? argv.destination : './';
-var sourcePath = argv.source ? argv.source : process.cwd();
-var sourcePackageJsonPath = path.join(sourcePath, 'package.json');
-var sourcePackageJson = JSON.parse(
+const destinationPath = argv.destination ? argv.destination : './';
+const sourcePath = argv.source ? argv.source : process.cwd();
+const sourcePackageJsonPath = path.join(sourcePath, 'package.json');
+const sourcePackageJson = JSON.parse(
   fs.readFileSync(sourcePackageJsonPath, 'utf-8'),
 );
 
@@ -35,13 +36,13 @@ function insertShims(currentPath, field) {
     return;
   }
 
-  var nodeModules = fs
+  const nodeModules = fs
     .readdirSync(path.join(currentPath, './node_modules'))
     .map((m) => path.join(currentPath, './node_modules', m))
     .filter((m) => fs.statSync(m).isDirectory)
     .filter((m) => fs.existsSync(path.join(m, 'package.json')));
 
-  nodeModules.forEach((modulePath) => {
+  for (const modulePath of nodeModules) {
     try {
       var packageJsonPath = path.join(modulePath, 'package.json');
       var prevFileContent = fs.readFileSync(packageJsonPath, 'utf-8');
@@ -65,7 +66,7 @@ function insertShims(currentPath, field) {
     } catch (e) {
       console.error(e);
     }
-  });
+  }
 }
 
 if (!Object.keys(sourcePackageJson).includes(argv.field)) {
