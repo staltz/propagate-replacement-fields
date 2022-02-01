@@ -6,6 +6,9 @@
   "bin": "index.js",
   "author": "Andre Staltz (staltz.com)",
   "license": "MIT",
+  "engines": {
+    "node": ">=12"
+  },
   "dependencies": {
     "yargs": "^8.0.2"
   }
