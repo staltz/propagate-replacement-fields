@@ -1,55 +1,55 @@
 #! /usr/bin/env node
-var fs = require("fs");
-var path = require("path");
+var fs = require('fs');
+var path = require('path');
 
-var argv = require("yargs")
-  .usage("Usage: $0 [options]")
-  .example("$0 --field=browser")
-  .option("field", {
-    alias: "f",
-    description: "package.json field with replacement modules"
+var argv = require('yargs')
+  .usage('Usage: $0 [options]')
+  .example('$0 --field=browser')
+  .option('field', {
+    alias: 'f',
+    description: 'package.json field with replacement modules',
   })
-  .option("source", {
-    alias: "s",
+  .option('source', {
+    alias: 's',
     description:
-      "where to look for the source package.json.\ndefault: process.cwd()"
+      'where to look for the source package.json.\ndefault: process.cwd()',
   })
-  .option("destination", {
-    alias: "d",
+  .option('destination', {
+    alias: 'd',
     description:
-      "where is the node_modules where propagation will happen.\n" +
-      "default: ./"
+      'where is the node_modules where propagation will happen.\n' +
+      'default: ./',
   })
-  .demandOption("field")
+  .demandOption('field')
   .help().argv;
 
-var destinationPath = argv.destination ? argv.destination : "./";
+var destinationPath = argv.destination ? argv.destination : './';
 var sourcePath = argv.source ? argv.source : process.cwd();
-var sourcePackageJsonPath = path.join(sourcePath, "package.json");
+var sourcePackageJsonPath = path.join(sourcePath, 'package.json');
 var sourcePackageJson = JSON.parse(
-  fs.readFileSync(sourcePackageJsonPath, "utf-8")
+  fs.readFileSync(sourcePackageJsonPath, 'utf-8'),
 );
 
 function insertShims(currentPath, field) {
-  if (!fs.existsSync(path.join(currentPath, "./node_modules"))) {
+  if (!fs.existsSync(path.join(currentPath, './node_modules'))) {
     return;
   }
 
   var nodeModules = fs
-    .readdirSync(path.join(currentPath, "./node_modules"))
-    .map(m => path.join(currentPath, "./node_modules", m))
-    .filter(m => fs.statSync(m).isDirectory)
-    .filter(m => fs.existsSync(path.join(m, "package.json")));
+    .readdirSync(path.join(currentPath, './node_modules'))
+    .map((m) => path.join(currentPath, './node_modules', m))
+    .filter((m) => fs.statSync(m).isDirectory)
+    .filter((m) => fs.existsSync(path.join(m, 'package.json')));
 
-  nodeModules.forEach(modulePath => {
+  nodeModules.forEach((modulePath) => {
     try {
-      var packageJsonPath = path.join(modulePath, "package.json");
-      var prevFileContent = fs.readFileSync(packageJsonPath, "utf-8");
+      var packageJsonPath = path.join(modulePath, 'package.json');
+      var prevFileContent = fs.readFileSync(packageJsonPath, 'utf-8');
       var packageJson = JSON.parse(prevFileContent);
       if (!Object.keys(packageJson).includes(field)) {
         packageJson[field] = {};
       }
-      Object.keys(sourcePackageJson[field]).forEach(replaced => {
+      Object.keys(sourcePackageJson[field]).forEach((replaced) => {
         const replacer = sourcePackageJson[field][replaced];
         if (
           replacer !== packageJson.name &&
@@ -58,8 +58,8 @@ function insertShims(currentPath, field) {
           packageJson[field][replaced] = replacer;
         }
       });
-      var nextFileContent = JSON.stringify(packageJson, null, "  ");
-      fs.writeFileSync(packageJsonPath, nextFileContent, "utf-8");
+      var nextFileContent = JSON.stringify(packageJson, null, '  ');
+      fs.writeFileSync(packageJsonPath, nextFileContent, 'utf-8');
 
       insertShims(modulePath, field);
     } catch (e) {
@@ -74,10 +74,10 @@ if (!Object.keys(sourcePackageJson).includes(argv.field)) {
       argv.field +
       '" was not found in ' +
       sourcePackageJsonPath +
-      ", so we can't propagate that."
+      ", so we can't propagate that.",
   );
   console.error(
-    "Look at that:\n\n" + JSON.stringify(sourcePackageJson, null, 2)
+    'Look at that:\n\n' + JSON.stringify(sourcePackageJson, null, 2),
   );
 } else {
   insertShims(destinationPath, argv.field);
