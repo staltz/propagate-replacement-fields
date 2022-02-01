@@ -46,14 +46,14 @@ function insertShims(currentPath, field) {
       var packageJsonPath = path.join(modulePath, "package.json");
       var prevFileContent = fs.readFileSync(packageJsonPath, "utf-8");
       var packageJson = JSON.parse(prevFileContent);
-      if (!(field in packageJson)) {
+      if (!Object.keys(packageJson).includes(field)) {
         packageJson[field] = {};
       }
       Object.keys(sourcePackageJson[field]).forEach(replaced => {
         const replacer = sourcePackageJson[field][replaced];
         if (
           replacer !== packageJson.name &&
-          !(replaced in packageJson[field])
+          !Object.keys(packageJson[field]).includes(replaced)
         ) {
           packageJson[field][replaced] = replacer;
         }
@@ -68,7 +68,7 @@ function insertShims(currentPath, field) {
   });
 }
 
-if (!(argv.field in sourcePackageJson)) {
+if (!Object.keys(sourcePackageJson).includes(argv.field)) {
   console.error(
     'ERROR: Field "' +
       argv.field +
